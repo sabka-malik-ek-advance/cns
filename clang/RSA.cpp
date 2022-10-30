@@ -1,69 +1,65 @@
-// C program for RSA asymmetric cryptographic
-// algorithm. For demonstration values are
-// relatively small compared to practical
-// application
-#include <bits/stdc++.h>
+#include <iostream>
+#include <math.h>
 using namespace std;
-
-// Returns gcd of a and b
-int gcd(int a, int h)
+// find gcd
+int gcd(int a, int b)
 {
-    int temp;
+    int t;
     while (1)
     {
-        temp = a % h;
-        if (temp == 0)
-            return h;
-        a = h;
-        h = temp;
+        t = a % b;
+        if (t == 0)
+            return b;
+        a = b;
+        b = t;
     }
 }
-
-// Code to demonstrate RSA algorithm
 int main()
 {
-    // Two random prime numbers
+    // 2 random prime numbers
     double p = 13;
     double q = 11;
-
-    // First part of public key:
-    double n = p * q;
-
-    // Finding other part of public key.
+    double n = p * q; // calculate n
+    double track;
+    double phi = (p - 1) * (q - 1); // calculate phi
+    // public key
     // e stands for encrypt
-    double e = 2;
-    double phi = (p - 1) * (q - 1);
+    double e = 7;
+    // for checking that 1 < e < phi(n) and gcd(e, phi(n)) = 1; i.e., e and phi(n) are coprime.
     while (e < phi)
     {
-        // e must be co-prime to phi and
-        // smaller than phi.
-        if (gcd(e, phi) == 1)
+        track = gcd(e, phi);
+        if (track == 1)
             break;
         else
             e++;
     }
-
-    // Private key (d stands for decrypt)
-    // choosing d such that it satisfies
-    // d*e = 1 + k * totient
-    int k = 7; // A constant value
-    double d = (1 + (k * phi)) / e;
-
-    // Message to be encrypted
-    double msg = 9;
-
-    printf("Message data = %lf", msg);
-
-    // Encryption c = (msg ^ e) % n
-    double c = pow(msg, e);
-    c = fmod(c, n);
-    printf("\nEncrypted data = %lf", c);
-
-    // Decryption m = (c ^ d) % n
+    // private key
+    // d stands for decrypt
+    // choosing d such that it satisfies d*e = 1 mod phi
+    double d1 = 1 / e;
+    double d = fmod(d1, phi);
+    double message = 9;
+    double c = pow(message, e); // encrypt the message
     double m = pow(c, d);
+    c = fmod(c, n);
     m = fmod(m, n);
-    printf("\nOriginal Message Sent = %lf", m);
-
+    cout << "Original Message = " << message;
+    cout << "\n"
+         << "p = " << p;
+    cout << "\n"
+         << "q = " << q;
+    cout << "\n"
+         << "n = pq = " << n;
+    cout << "\n"
+         << "phi = " << phi;
+    cout << "\n"
+         << "e = " << e;
+    cout << "\n"
+         << "d = " << d;
+    cout << "\n"
+         << "Encrypted message = " << c;
+    cout << "\n"
+         << "Decrypted message = " << m;
     return 0;
 }
-// This code is contributed by Akash Sharan.
