@@ -1,75 +1,63 @@
-// C++ code to implement Vigenere Cipher
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <string>
 using namespace std;
-
-// This function generates the key in
-// a cyclic manner until it's length isi'nt
-// equal to the length of original text
-string generateKey(string str, string key)
+class Vig
 {
-    int x = str.size();
-
-    for (int i = 0;; i++)
+public:
+    string k;
+    Vig(string k)
     {
-        if (x == i)
-            i = 0;
-        if (key.size() == str.size())
-            break;
-        key.push_back(key[i]);
+        for (int i = 0; i < k.size(); ++i)
+        {
+            if (k[i] >= 'A' && k[i] <= 'Z')
+                this->k += k[i];
+            else if (k[i] >= 'a' && k[i] <= 'z')
+                this->k += k[i] + 'A' - 'a';
+        }
     }
-    return key;
-}
-
-// This function returns the encrypted text
-// generated with the help of the key
-string cipherText(string str, string key)
-{
-    string cipher_text;
-
-    for (int i = 0; i < str.size(); i++)
+    string encryption(string t)
     {
-        // converting in range 0-25
-        char x = (str[i] + key[i]) % 26;
-
-        // convert into alphabets(ASCII)
-        x += 'A';
-
-        cipher_text.push_back(x);
+        string output;
+        for (int i = 0, j = 0; i < t.length(); ++i)
+        {
+            char c = t[i];
+            if (c >= 'a' && c <= 'z')
+                c += 'A' - 'a';
+            else if (c < 'A' || c > 'Z')
+                continue;
+            output += (c + k[j] - 2 * 'A') % 26 + 'A'; // added 'A' to bring it in range of ASCII alphabet [ 65-90 | A-Z ]
+            j = (j + 1) % k.length();
+        }
+        return output;
     }
-    return cipher_text;
-}
-
-// This function decrypts the encrypted text
-// and returns the original text
-string originalText(string cipher_text, string key)
-{
-    string orig_text;
-
-    for (int i = 0; i < cipher_text.size(); i++)
+    string decryption(string t)
     {
-        // converting in range 0-25
-        char x = (cipher_text[i] - key[i] + 26) % 26;
-
-        // convert into alphabets(ASCII)
-        x += 'A';
-        orig_text.push_back(x);
+        string output;
+        for (int i = 0, j = 0; i < t.length(); ++i)
+        {
+            char c = t[i];
+            if (c >= 'a' && c <= 'z')
+                c += 'A' - 'a';
+            else if (c < 'A' || c > 'Z')
+                continue;
+            output += (c - k[j] + 26) % 26 + 'A'; // added 'A' to bring it in range of ASCII alphabet [ 65-90 | A-Z ]
+            j = (j + 1) % k.length();
+        }
+        return output;
     }
-    return orig_text;
-}
-
-// Driver program to test the above function
+};
 int main()
 {
-    string str = "GEEKSFORGEEKS";
-    string keyword = "AYUSH";
+    Vig v("WELCOME");
+    string ori;
+    cout << "Enter the Message : ";
+    cin >> ori;
+    string encrypt = v.encryption(ori);
+    string decrypt = v.decryption(encrypt);
+    cout << "Original Message: " << ori << endl;
+    cout << "Encrypted Message: " << encrypt << endl;
 
-    string key = generateKey(str, keyword);
-    string cipher_text = cipherText(str, key);
-
-    cout << "Ciphertext : "
-         << cipher_text << "\n";
-
-    cout << "Original/Decrypted Text : "
-         << originalText(cipher_text, key);
-    return 0;
+    //    IF NEED TO DECRYPT THE REMOVE TEH NEXT COMMENT
+    //    cout << "Decrypted Message: " << decrypt << endl;
 }
