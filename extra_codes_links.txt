@@ -1,4 +1,4 @@
 https://www.tutorialspoint.com/cryptography_with_python/cryptography_with_python_quick_guide.htm - Caesar Cipher Algorithm,ROT13 Algorithm,Transposition Cipher, Cryptography with Python - XOR Process, Multiplicative Cipher,Cryptography with Python - Affine Cipher,Hacking Monoalphabetic Cipher,Simple Substitution Cipher,  Vignere Cipher, One Time Pad Cipher, Symmetric and Asymmetric Cryptography,Understanding RSA Algorithm, RSA Cipher Encryption, 
 
 https://github.com/ceceww/aes - C++ AES encrypt,decrypt (must include structure.h in the same file)
-
+https://github.com/h5p9sl/hmac_sha256 - HMAC but minnor error
