@@ -1,24 +1,36 @@
-import base64 
+# install pycryptodome - pip install pycryptodome
+
+import base64
+import hashlib
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad,unpad
-
-#AES ECB mode without IV
-
-data = 'I love Medium'
-key = 'AAAAAAAAAAAAAAAA' #Must Be 16 char for AES128
-
-def encrypt(raw):
-        raw = pad(raw.encode(),16)
-        cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
-        return base64.b64encode(cipher.encrypt(raw))
-
-def decrypt(enc):
-        enc = base64.b64decode(enc)
-        cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
-        return unpad(cipher.decrypt(enc),16)
-
-encrypted = encrypt(data)
-print('encrypted ECB Base64:',encrypted.decode("utf-8", "ignore"))
-
-decrypted = decrypt(encrypted)
-print('data: ',decrypted.decode("utf-8", "ignore"))
+from Crypto import Random
+ 
+BLOCK_SIZE = 16
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
+unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+ 
+password = input("Enter encryption password: ")
+ 
+def encrypt(raw, password):
+    private_key = hashlib.sha256(password.encode("utf-8")).digest()
+    raw = pad(raw)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+ 
+ 
+def decrypt(enc, password):
+    private_key = hashlib.sha256(password.encode("utf-8")).digest()
+    enc = base64.b64decode(enc)
+    iv = enc[:16]
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[16:]))
+ 
+ 
+# First let us encrypt secret message
+encrypted = encrypt("This is a secret message", password)
+print(encrypted)
+ 
+# Let us decrypt using our original password
+decrypted = decrypt(encrypted, password)
+print(bytes.decode(decrypted))
