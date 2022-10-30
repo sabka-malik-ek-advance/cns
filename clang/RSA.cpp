@@ -17,14 +17,17 @@ int gcd(int a, int b)
 int main()
 {
     // 2 random prime numbers
-    double p = 13;
-    double q = 11;
+    double p, q;
+    cout<<"Enter the 2 prime numbers \n";
+    cin>>p>>q;
     double n = p * q; // calculate n
     double track;
     double phi = (p - 1) * (q - 1); // calculate phi
     // public key
     // e stands for encrypt
-    double e = 7;
+    double e;
+    cout<<"Enter the Key : ";
+    cin>>e;
     // for checking that 1 < e < phi(n) and gcd(e, phi(n)) = 1; i.e., e and phi(n) are coprime.
     while (e < phi)
     {
@@ -39,12 +42,14 @@ int main()
     // choosing d such that it satisfies d*e = 1 mod phi
     double d1 = 1 / e;
     double d = fmod(d1, phi);
-    double message = 9;
+    double message;
+    cout<<"Enter the Message : ";
+    cin>>message;
     double c = pow(message, e); // encrypt the message
     double m = pow(c, d);
     c = fmod(c, n);
     m = fmod(m, n);
-    cout << "Original Message = " << message;
+    cout << "\nOriginal Message = " << message;
     cout << "\n"
          << "p = " << p;
     cout << "\n"
@@ -59,7 +64,9 @@ int main()
          << "d = " << d;
     cout << "\n"
          << "Encrypted message = " << c;
-    cout << "\n"
-         << "Decrypted message = " << m;
+    
+    // IF ALSO NEED TO DECRYPT THEN REOMVE THE NEXT TWO COMMENT
+    // cout << "\n"
+    //      << "Decrypted message = " << m;
     return 0;
 }
